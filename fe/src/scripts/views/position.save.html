@@ -1,0 +1,109 @@
+<div class="box box-info">
+  <div class="box-header with-border">
+    <h3 class="box-title">商品添加</h3>
+  </div>
+  <!-- /.box-header -->
+  <!-- form start -->
+  <form class="form-horizontal" id="possave" action="/api/position/save" method="post" enctype="multipart/form-data">
+    <div class="box-body">
+      <div class="form-group">
+        <label for="thumbnailUrl" class="col-sm-2 control-label">商品详情图片</label>
+        <div class="col-sm-10 morefile">
+          <div class="addMore" id="add-clone">
+            <input type="file" class="form-control" id="thumbnailUrl" name="thumbnailUrl" id="thumbnailUrl">
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="form-group">
+        <label for="goodsId" class="col-sm-2 control-label">商品Id</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="goodsId" id="goodsId" placeholder="请输入商品Id">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="type" class="col-sm-2 control-label">商品类型</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="type" id="type" placeholder="请输入商品类型">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">商品名称</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="positionName" id="positionName" placeholder="请输入商品名称">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="price" class="col-sm-2 control-label">商品价格</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="price" id="price" placeholder="请输入商品价格">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="linePrice" class="col-sm-2 control-label">商品的划线价格</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="linePrice" id="linePrice" placeholder="请输入划线价格">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="channel" class="col-sm-2 control-label">商品的渠道</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="linePrice" id="linePrice" placeholder="请输入商品的渠道">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="sale_time" class="col-sm-2 control-label">上架时间</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="sale_time" id="sale_time" placeholder="请输入上架时间">
+        </div>
+      </div>
+      <div class="form-group">
+          <label>Date range:</label>
+          <div class="input-group">
+            <div class="input-group-addon">
+              <i class="fa fa-calendar"></i>
+            </div>
+            <input type="text" class="form-control pull-right" id="reservation">
+          </div>
+          <!-- /.input group -->
+        </div>
+      <!-- ---------------------------商品详情信息--------------------------------------------------------------- -->
+      <div class="form-group">
+        <label for="goodsInfo" class="col-sm-2 control-label">商品的样式</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="goodsInfo" id="goodsInfo" placeholder="请输入商品样式">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="detail" class="col-sm-2 control-label">商品详情</label>
+
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="detail" id="detail" placeholder="请输入商品详情">
+        </div>
+      </div>
+      <div class="form-group" id="form-imgUrl">
+        <label for="imgUrl" class="col-sm-2 control-label">商品详情图片</label>
+        <div class="col-sm-10 morefile">
+          <!-- "{{`http://localhost:3000/uploads/${pos.companyLogo}`}}" -->
+          <div class="addMore" id="add-more">
+            <input type="file" class="form-control" name="imgUrl" multiple id="imgUrl">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      <button type="button" id="posback" class="btn btn-default">返回</button>
+      <button type="button" id="possubmit" class="btn btn-info pull-right">提交</button>
+    </div>
+    <!-- /.box-footer -->
+  </form>
+</div>
