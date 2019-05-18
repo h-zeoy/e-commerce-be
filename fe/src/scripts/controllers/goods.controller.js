@@ -1,7 +1,7 @@
-import posListTpl from '../views/position.list.html'
-import posSaveTpl from '../views/position.save.html'
-import posUpdateTpl from '../views/position.update.html'
-import posModel from '../models/position.model'
+import posListTpl from '../views/goods.list.html'
+import posSaveTpl from '../views/goods.save.html'
+import posUpdateTpl from '../views/goods.update.html'
+import posModel from '../models/goods.model'
 
 const _genID = () => {
   return Math.random().toString(36).substr(2) + Date.now().toString(36)
@@ -70,7 +70,7 @@ const _handleUpdateSubmitClick = (router, pageNo, keywords) => {
   let options = {
     "beforeSerialize": modifySubmitData,
     "success": (result, status) => {
-      if (result.ret) {
+      if (result.success) {
         $("#posupdate").get(0).reset()
       } else {
         alert('修改失败')
@@ -80,20 +80,16 @@ const _handleUpdateSubmitClick = (router, pageNo, keywords) => {
     "dataType": "json"
   };
   $("#posupdate").ajaxSubmit(options)
-  router.go(`/position?pageNo=${pageNo}&keywords=${keywords || ''}`)
+  router.go(`/goods?pageNo=${pageNo}&keywords=${keywords || ''}`)
 }
 
 const _handleUpperShelfClick = async ({
-  goodsId,
-  type
+  goodsId
 }) => {
-  console.log(goodsId,
-    type);
   let result = await posModel.uppershelf({
-    goodsId,
-    type
+    goodsId
   });
-  if (result.ret) {
+  if (result.success) {
     location.reload();
   } else {
     alert('商品上架失败，请与管理员联系.')
@@ -101,17 +97,13 @@ const _handleUpperShelfClick = async ({
 }
 
 const _handleLowerShelfClick = async ({
-  goodsId,
-  type
+  goodsId
 }) => {
-  console.log(goodsId,
-    type);
   let result = await posModel.lowershelf({
-    goodsId,
-    type
+    goodsId
   });
 
-  if (result.ret) {
+  if (result.success) {
     location.reload();
   } else {
     alert('商品下架失败，请与管理员联系.')
@@ -163,14 +155,14 @@ const bindListEvents = ({
       pageNo = 1
     } = req.query || {}
 
-    router.go(`/position?pageNo=${pageNo}&keywords=${keywords}`)
+    router.go(`/goods?pageNo=${pageNo}&keywords=${keywords}`)
   })
 }
 
 
 
 const bindSaveEvents = (router) => {
-  $('#posback').on('click', () => router.go('/position'))
+  $('#posback').on('click', () => router.go('/goods'))
   $('#possubmit').on('click', _handleAddSubmitClick)
   $('#imgUrl').on("change", _handleAddMore)
   $('#thumbnailUrl').on("change", _handleAddClone)
@@ -199,7 +191,7 @@ const _handleCloneUpload = async function() {
     let result = await (posModel.cloneupload({
       imgData: cloneImg
     }))
-    if (result.ret) {
+    if (result.success) {
       cloneImg = result.data.imageUrl;
       alert('上传成功');
     } else {
@@ -215,7 +207,7 @@ const _handleMoreUpload = async function() {
     let result = await (posModel.moreupload({
       imgData: moreImg
     }))
-    if (result.ret) {
+    if (result.success) {
       moreImg = result.data.imageUrl;
       console.log(moreImg);
       alert('上传成功');
@@ -261,7 +253,7 @@ const bindUpdateEvents = ({
   pageNo,
   keywords
 }) => {
-  $('#posback').on('click', () => router.go(`/position?pageNo=${pageNo}&keywords=${keywords||''}`))
+  $('#posback').on('click', () => router.go(`/goods?pageNo=${pageNo}&keywords=${keywords||''}`))
   $('#possubmit').on('click', _handleUpdateSubmitClick.bind(this, router, pageNo, keywords))
 }
 
@@ -276,7 +268,8 @@ const list = async ({
     pageSize,
     keywords
   }))
-  if (result.ret) {
+
+  if (result.success) {
     let total = result.data.total
     let pageCount = Math.ceil(total / ~~pageSize)
     let html = template.render(posListTpl, {

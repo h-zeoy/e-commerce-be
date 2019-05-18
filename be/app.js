@@ -7,9 +7,14 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var positionRouter = require('./routes/position')
+var qiniuRouter = require('./routes/qiniu')
+var goodsRouter = require('./routes/goods')
 
 var app = express();
-
+var bodyParser = require('body-parser');
+//handle request entity too large
+app.use(bodyParser.json({limit:'50mb'}));
+app.use(bodyParser.urlencoded({limit:'50mb',extended:true}));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -24,6 +29,8 @@ app.use('/', indexRouter);
 
 app.use('/api/users', usersRouter);
 app.use('/api/position', positionRouter)
+app.use('/api/qiniu', qiniuRouter)
+app.use('/api/goods', goodsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

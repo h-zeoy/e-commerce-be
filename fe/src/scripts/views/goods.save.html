@@ -1,0 +1,122 @@
+<div class="box box-info">
+    <div class="box-header with-border">
+      <h3 class="box-title">商品添加</h3>
+    </div>
+    <!-- /.box-header -->
+    <!-- form start -->
+    <form class="form-horizontal">
+      <div class="box-body">
+        <div class="form-group" id="thumbnailUrl-group">
+          <label for="thumbnailUrl" class="col-sm-2 control-label">缩略图</label>
+          <div class="col-sm-10 morefile">
+            <div class="addMore" id="add-clone">
+              <input type="file" class="form-control" id="thumbnailUrl" name="thumbnailUrl">
+              <span class="help-block"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="goods: relative;">
+            <p id="cloneUpload" style="width: 80px; goods: absolute;left: 50%;top:0;margin-left: -40px;background: #ccc;text-align: center;color:#fff">点击上传</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="type" class="col-sm-2 control-label">商品类型</label>
+          <div class="col-sm-10">
+              <label class="type-label"><input name="type" type="radio" checked value="童装" />童装 </label> 
+              <label class="type-label"><input name="type" type="radio" value="母婴" />母婴 </label> 
+              <label class="type-label"><input name="type" type="radio" value="居家" />居家 </label> 
+              <label class="type-label"><input name="type" type="radio" value="美食" />美食 </label> 
+              <label class="type-label"><input name="type" type="radio" value="女装" />女装 </label> 
+              <label class="type-label"><input name="type" type="radio" value="鞋包" />鞋包 </label> 
+              <label class="type-label"><input name="type" type="radio" value="美妆" />美妆 </label> 
+              <label class="type-label"><input name="type" type="radio" value="进口" />进口 </label> 
+          </div>
+          <span class="help-block"></span>
+        </div>
+        <div class="form-group">
+          <label for="name" class="col-sm-2 control-label">商品名称</label>
+  
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="name" id="name" placeholder="请输入商品名称">
+            <span class="help-block"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="price" class="col-sm-2 control-label">商品价格</label>
+  
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="price" id="price" placeholder="请输入商品价格">
+            <span class="help-block"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="linePrice" class="col-sm-2 control-label">商品的划线价格</label>
+  
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="linePrice" id="linePrice" placeholder="请输入划线价格">
+            <span class="help-block"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="channel" class="col-sm-2 control-label">商品的渠道</label>
+          <div class="col-sm-10">
+              <label class="type-label"><input name="channel" type="radio" checked value="9.9" />9.9 </label> 
+              <label class="type-label"><input name="channel" type="radio" value="限时秒杀" />限时秒杀 </label> 
+              <label class="type-label"><input name="channel" type="radio" value="新品特惠" />新品特惠 </label> 
+              <label class="type-label"><input name="channel" type="radio" value="今日特卖" />今日特卖 </label> 
+          </div>
+          <span class="help-block"></span>
+        </div>
+        <div class="form-group">
+          <label for="sale_time" class="col-sm-2 control-label">可售时间</label>
+          <div class="input-group" style="width: 610px; padding: 0 15px 0 15px">
+            <div class="input-group-addon">
+              <i class="fa fa-clock-o"></i>
+            </div>
+            <input type="text" class="form-control pull-right" id="reservationtime">
+          </div>
+        </div>
+        <!-- ---------------------------商品详情信息--------------------------------------------------------------- -->
+        <div class="form-group">
+          <label for="goodsInfo" class="col-sm-2 control-label">商品的样式</label>
+  
+          <div class="col-sm-10" id="add-el-input">
+              <p style="display: flex">
+                <input style="flex: 0.5" type="button" class="form-control" name="add" id="add-input" value="添加">
+                <input style="flex: 0.5" type="button" class="form-control" name="add" id="rm-input" value="删除">
+              </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="detail" class="col-sm-2 control-label">商品详情</label>
+  
+          <div class="col-sm-10">
+            <!-- <input type="text" class="form-control" name="detail" id="detail" placeholder="请输入商品详情"> -->
+            <textarea rows="4" cols="80" name="detail" id="detail">请填写详情信息</textarea>
+            <span class="help-block"></span>
+          </div>
+        </div>
+        <div class="form-group" id="form-imgUrl">
+          <label for="imgUrl" class="col-sm-2 control-label">商品详情图片</label>
+          <div class="col-sm-10 morefile">
+            <!-- "{{`http://localhost:3000/uploads/${pos.companyLogo}`}}" -->
+            <div class="addMore" id="add-more">
+              <input type="file" class="form-control" name="imgUrl" multiple id="imgUrl">
+              <span class="help-block"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group"  style="goods: relative;">
+          <p id="moreUpload" style="width: 80px; goods: absolute;left: 50%;top:0;margin-left: -40px;background: #ccc;text-align: center;color:#fff">点击上传</p>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="button" id="posback" class="btn btn-default">返回</button>
+        <button type="button" id="possubmit" class="btn btn-info pull-right">提交</button>
+      </div>
+      <!-- /.box-footer -->
+    </form>
+  </div>
+  
+  

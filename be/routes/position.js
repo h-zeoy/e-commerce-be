@@ -8,7 +8,7 @@ const authMiddleware = require('../middlewares/auth.js')
 
 router.get('/list', positionController.list)
 
-router.post('/save', fsUploadMiddleware.fileupload, positionController.save)
+router.post('/save', positionController.save)
 
 router.get('/lowershelf', positionController.lowershelf)
 

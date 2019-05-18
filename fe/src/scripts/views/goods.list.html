@@ -1,0 +1,69 @@
+<div class="box">
+    <div class="box-header with-border">
+      <h3 class="box-title">
+         <button id="addbtn" class="btn btn-block btn-success"><span class="fa fa-plus"></span> 添加</button>
+      </h3>
+      <div class="box-tools">
+        <div class="input-group input-group-sm" style="width: 150px;">
+          <input type="text" id="keywords" value="{{keywords}}" name="pos_search" class="form-control pull-right" placeholder="搜索">
+  
+          <div class="input-group-btn">
+            <button type="button" id="possearch" class="btn btn-default"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <table class="table table-bordered">
+        <tr>
+          <th style="width: 10px">#</th>
+          <th>商品缩略图</th>
+          <th>商品编号</th>
+          <th>商品名称</th>
+          <th>商品类型</th>
+          <th>商品价格</th>
+          <th>商品渠道</th>
+          <th>售卖状态</th>
+          <th style="width: 140px">操作</th>
+        </tr>
+          {{each list v i}}
+          <tr>
+            <td>{{i+1}}</td>
+            <td><img width="50" height="50" src="{{v.thumbnailUrl}}" alt=""></td>
+            <td>{{v.code}}</td>
+            <td>{{v.name}}</td>
+            <td>{{v.type}}</td>
+            <td>{{v.price}}</td>
+            <td>{{v.channel}}</td>
+            {{if v.sale}} <td>售卖中</td> {{else}}<td>已下架</td>{{/if}}
+            <td>
+              <button class="btn btn-sm btn-primary pos-update" posid="{{v.goodsId}}" type="{{v.type}}" pageno="{{pageNo}}" keywords="{{keywords}}"><span class="fa fa-edit"></span> 修改</button>
+              {{if v.sale}}
+              <button class="btn btn-sm btn-warning pos-lowerShelf" posid="{{v.goodsId}}" type="{{v.type}}" pageno="{{pageNo}}" pagecount="{{pageCount}}" pagesize="{{pageSize}}" keywords="{{keywords}}" filename=""></span> 下架</button>
+              {{else}}
+              <button class="btn btn-sm btn-danger pos-upperShelf" posid="{{v.goodsId}}" type="{{v.type}}" pageno="{{pageNo}}" pagecount="{{pageCount}}" pagesize="{{pageSize}}" keywords="{{keywords}}" filename=""></span> 上架</button>
+              {{/if}}
+            </td>
+          </tr>
+          {{/each}}
+          {{if list.length == 0}}
+          <tr>
+            <td colspan="8"> 暂无数据. </td>
+          </tr>
+          {{/if}}
+      </table>
+    </div>
+    {{if list.length > 0}}
+    <div class="box-footer clearfix">
+      <ul class="pagination pagination-sm no-margin pull-right">
+        <li><a href="/#/goods?pageNo={{pageNo > 1 ? pageNo-1 : 1}}">&laquo;</a></li>
+        {{each pageArray v i}}
+        <li class="{{(i+1) === pageNo ? 'active' : ''}}"><a href="/#/goods?pageNo={{i+1}}&keywords={{keywords}}">{{i+1}}</a></li>
+        {{/each}}
+        <li><a href="/#/goods?pageNo={{pageNo < pageCount ? pageNo + 1 : pageCount}}">&raquo;</a></li>
+      </ul>
+    </div>
+    {{/if}}
+  </div>
+  <!-- /.box -->

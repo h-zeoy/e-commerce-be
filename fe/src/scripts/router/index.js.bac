@@ -1,6 +1,6 @@
 import Router from 'sme-router'
 
-import goodsController from '../controllers/goods.controller'
+import positionController from '../controllers/position.controller'
 
 import {
   ActiveClass,
@@ -18,24 +18,24 @@ const register = () => {
     ActiveClass()
   })
 
-  router.route('/goods', async (req, res, next) => {
+  router.route('/position', async (req, res, next) => {
     let {
       pageNo = 1,
       pageSize = 2,
       keywords = ''
     } = req.query || {}
 
-    res.render(await goodsController.list({
+    res.render(await positionController.list({
       pageNo,
       pageSize,
       keywords,
       router
     }))
-    goodsController.bindListEvents({router, req})
+    positionController.bindListEvents({router, req})
   })
 
   router.route('/save', (req, res, next) => {
-    res.render(goodsController.save())
+    res.render(positionController.save())
     $(document).ready(function() {
       $('#reservationtime').daterangepicker({
         timePicker: true, //显示时间
@@ -55,7 +55,7 @@ const register = () => {
         sessionStorage.setItem("stopSaleTime", end.format('YYYY-MM-DD HH:mm:ss'));
       });
     })
-    goodsController.bindSaveEvents(router)
+    positionController.bindSaveEvents(router)
   })
 
   router.route('/update', async (req, res, next) => {

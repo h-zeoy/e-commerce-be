@@ -28,11 +28,26 @@ const listall = ({
   })
 }
 
-const listone = (id) => {
+const listone = ({goodsId, type}) => {
   return $.ajax({
     url: '/api/position/listone',
     data: {
-      id
+      goodsId,
+      type
+    },
+    success: (result) => {
+      return result
+    }
+  })
+}
+
+const save = (params) => {
+  return $.ajax({
+    type: "POST",
+    url: '/api/position/save',
+    dataType: "json",
+    data: {
+      params,
     },
     success: (result) => {
       return result
@@ -72,10 +87,49 @@ const uppershelf = ({
   })
 }
 
+const cloneupload = ({
+  imgData
+}) => {
+  return $.ajax({
+    type: "POST",
+    url: '/api/qiniu/cloneupload',
+    dataType: "json",
+    data: {
+      imgData,
+    },
+    // headers: {
+    //   'X-Access-Token': localStorage.getItem('token')
+    // },
+    success: (result) => {
+      return result
+    }
+  })
+}
+
+const moreupload = ({
+  imgData
+}) => {
+  return $.ajax({
+    type: "POST",
+    url: '/api/qiniu/moreupload',
+    dataType: "json",
+    data: {
+      imgData,
+    },
+    success: (result) => {
+      return result
+    }
+  })
+}
+
+
 export default {
   list,
   lowershelf,
   uppershelf,
   listone,
-  listall
+  listall,
+  cloneupload,
+  moreupload,
+  save
 }
