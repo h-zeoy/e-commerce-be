@@ -28,7 +28,7 @@
           <th style="width: 140px">操作</th>
         </tr>
           {{each list v i}}
-          <tr>
+          <tr class="tr-listData" data-sale={{v.sale}} >
             <td>{{i+1}}</td>
             <td><img width="50" height="50" src="{{v.thumbnailUrl}}" alt=""></td>
             <td>{{v.code}}</td>

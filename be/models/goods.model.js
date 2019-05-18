@@ -27,10 +27,9 @@ const listall = ({
 
 // 查询单条
 const listone = ({
-    goodsId
+    id
 }) => {
-    console.log(goodsId);
-    let sql = `select a.*,  b.name, b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale from( select * from all_goods a where goodsId = '${goodsId}') a left join list_data b on a.aid = b.lid;`;
+    let sql = `select a.*,  b.name, b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale, c.goodsInfo, c.detail, c.person, c.imgUrl from( select * from all_goods a where goodsId = '${id}') a left join list_data b on a.aid = b.lid left join list_detail c on c.ldid = a.aid`;
     return new Promise((resolve, reject) => {
         db.pool.getConnection((err, connection) => {
             if (err) {
@@ -41,6 +40,7 @@ const listone = ({
                 if (err) {
                     reject(err)
                 } else {
+                    console.log(result);
                     resolve(result);
                 }
             })
@@ -75,6 +75,7 @@ const list = ({
             connection.release();
         })
     }).then((_) => {
+        console.log(_);
         let typeVal = '', channelVal  = '';
         _.map((item) => {
             switch(item.type) {
@@ -263,15 +264,16 @@ const save = async (data) => {
 const update = (data) => {
     data['updateTime'] = moment().format('YYYY-MM-DD HH:mm:ss');
     let {
-        goodsId, name, updateTime,
+        id, name, updateTime,
         thumbnailUrl, price, linePrice,
         saleTime, stopSaleTime, goodsInfo,
         imgUrl, detail, channel
     } = data;
+    console.log(name,id);
     var flag = true;
-    let sqlArr = [`UPDATE all_goods SET updateTime = '${updateTime}', saleTime = '${saleTime}', stopSaleTime = '${stopSaleTime}' where goodsId = '${goodsId}'`,
-    `UPDATE list_data SET name = '${name}', thumbnailUrl = '${thumbnailUrl}', price = '${price}',linePrice = '${linePrice}', channel = '${channel}' where lid = (select aid  from all_goods where goodsId = '${goodsId}')`,
-    `UPDATE list_detail SET goodsInfo = '${goodsInfo}', detail = '${detail}', imgUrl = '${imgUrl}' where ldid = (select aid  from all_goods where goodsId = '${goodsId}')`]
+    let sqlArr = [`UPDATE all_goods SET updateTime = '${updateTime}', saleTime = '${saleTime}', stopSaleTime = '${stopSaleTime}' where goodsId = '${id}'`,
+    `UPDATE list_data SET name = '${name}', thumbnailUrl = '${thumbnailUrl}', price = '${price}',linePrice = '${linePrice}', channel = '${channel}' where lid = (select aid  from all_goods where goodsId = '${id}')`,
+    `UPDATE list_detail SET goodsInfo = '${goodsInfo}', detail = '${detail}', imgUrl = '${imgUrl}' where ldid = (select aid  from all_goods where goodsId = '${id}')`]
     return new Promise((resolve, reject) => {
         db.pool.getConnection((err, connection) => {
             if (err) {
@@ -279,6 +281,7 @@ const update = (data) => {
             }
             connection.beginTransaction((err) => {
                 if (err) {
+                    console.log(err);
                     reject(err)
                 }
                 sqlArr.map((item) => {

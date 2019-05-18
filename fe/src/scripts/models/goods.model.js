@@ -28,13 +28,9 @@ const list = ({
     })
   }
   
-  const listone = ({goodsId, type}) => {
+  const listone = ({id}) => {
     return $.ajax({
-      url: '/api/goods/listone',
-      data: {
-        goodsId,
-        type
-      },
+      url: `/api/goods/listone?id=${id}`,
       success: (result) => {
         return result
       }
@@ -45,6 +41,20 @@ const list = ({
     return $.ajax({
       type: "POST",
       url: '/api/goods/save',
+      dataType: "json",
+      data: {
+        params,
+      },
+      success: (result) => {
+        return result
+      }
+    })
+  }
+
+  const update = (params) => {
+    return $.ajax({
+      type: "POST",
+      url: '/api/goods/update',
       dataType: "json",
       data: {
         params,
@@ -84,7 +94,8 @@ const list = ({
   }
   
   const cloneupload = ({
-    imgData
+    imgData,
+    imgName
   }) => {
     return $.ajax({
       type: "POST",
@@ -92,6 +103,7 @@ const list = ({
       dataType: "json",
       data: {
         imgData,
+        imgName
       },
       // headers: {
       //   'X-Access-Token': localStorage.getItem('token')
@@ -103,7 +115,8 @@ const list = ({
   }
   
   const moreupload = ({
-    imgData
+    imgData,
+    imgName
   }) => {
     return $.ajax({
       type: "POST",
@@ -111,6 +124,7 @@ const list = ({
       dataType: "json",
       data: {
         imgData,
+        imgName
       },
       success: (result) => {
         return result
@@ -127,5 +141,6 @@ const list = ({
     listall,
     cloneupload,
     moreupload,
-    save
+    save,
+    update
   }

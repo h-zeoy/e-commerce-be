@@ -21,13 +21,13 @@ const random = () => {
     return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 }
 // 单张图片上传
-const cloneupload = (imgData) => {
+const cloneupload = ({imgData, imgName}) => {
     //过滤data:URL
     var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
     var dataBuffer = Buffer.from(base64Data, 'base64');
     return new Promise((resolve, reject) => {
         // 构建图片名
-        var fileName = random() + random() + '-' + random() + '.png';
+        var fileName = imgName + '.png';
         // 构建图片路径
         var filePath = path.resolve(__dirname, '../public/uploads/' + fileName);
 
@@ -73,17 +73,19 @@ const cloneupload = (imgData) => {
 
 
 // 多张图片上传
-const moreupload = (imgData) => {
-    let qiniuPromise = imgData.map(baseUrl => {
+const moreupload = ({imgData, imgName}) => {
+    // imgName = imgName.splice(',');
+    console.log(imgName);
+    let qiniuPromise = imgData.map((baseUrl, index)=> {
         //过滤data:URL
+        // console.log(index, baseUrl);
         var base64Data = baseUrl.replace(/^data:image\/\w+;base64,/, "");
         var dataBuffer = Buffer.from(base64Data, 'base64');
         return new Promise((resolve, reject) => {
             // 构建图片名
-            var fileName = random() + random() + '-' + random() + '.png';
+            var fileName = imgName[index] + '.png';
             // 构建图片路径
             var filePath = path.resolve(__dirname, '../public/uploads/' + fileName);
-
             fs.writeFile(filePath, dataBuffer, function (err) {
                 if (err) {
                     reject({

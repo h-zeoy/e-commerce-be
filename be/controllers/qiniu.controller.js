@@ -1,9 +1,9 @@
 const qiniuModel = require('../models/qiniu.model');
 
 const cloneupload = (req, res, next) => {
-  let { imgData } = req.body
+  let { imgData, imgName } = req.body
   res.header('Content-Type', 'application/json; charset=utf8')
-  qiniuModel.cloneupload(imgData).then((_) => {
+  qiniuModel.cloneupload({imgData, imgName}).then((_) => {
     res.render('qiniu.view.ejs', {
       success: JSON.stringify(true),
       data: JSON.stringify({ status: '200', msg: '上传成功', imageUrl: _ })
@@ -18,10 +18,9 @@ const cloneupload = (req, res, next) => {
 }
 
 const moreupload = async (req, res, next) => {
-  let { imgData } = req.body
-  // console.log(imgData);
+  let { imgData, imgName } = req.body
   res.header('Content-Type', 'application/json; charset=utf8')
-  qiniuModel.moreupload(imgData).then((_) => {
+  qiniuModel.moreupload({imgData, imgName}).then((_) => {
     res.render('qiniu.view.ejs', {
       success: JSON.stringify(true),
       data: JSON.stringify({ status: '200', msg: '上传成功', imageUrl: _ })

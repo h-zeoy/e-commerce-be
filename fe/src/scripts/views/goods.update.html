@@ -9,6 +9,11 @@
       <div class="form-group" id="thumbnailUrl-group">
         <label for="thumbnailUrl" class="col-sm-2 control-label">缩略图</label>
         <div class="col-sm-10 morefile">
+            <div class="flexBox" id="add-clone-Image">
+              <img src="{{pos.thumbnailUrl}}">
+              <p class="aaron"><%- pos.cloneName%></p>
+              <i class="deleteImg deteleClone"></i>
+          </div>
           <div class="addMore" id="add-clone">
             <input type="file" class="form-control" id="thumbnailUrl" name="thumbnailUrl">
             <span class="help-block"></span>
@@ -21,15 +26,15 @@
       </div>
       <div class="form-group">
         <label for="type" class="col-sm-2 control-label">商品类型</label>
-        <div class="col-sm-10">
-            <label class="type-label"><input name="type" type="radio" checked value="童装" />童装 </label> 
-            <label class="type-label"><input name="type" type="radio" value="母婴" />母婴 </label> 
-            <label class="type-label"><input name="type" type="radio" value="居家" />居家 </label> 
-            <label class="type-label"><input name="type" type="radio" value="美食" />美食 </label> 
-            <label class="type-label"><input name="type" type="radio" value="女装" />女装 </label> 
-            <label class="type-label"><input name="type" type="radio" value="鞋包" />鞋包 </label> 
-            <label class="type-label"><input name="type" type="radio" value="美妆" />美妆 </label> 
-            <label class="type-label"><input name="type" type="radio" value="进口" />进口 </label> 
+        <div class="col-sm-10 type">
+            <label class="type-label"><input name="type" type="radio" data-id = '0' value="童装" />童装 </label> 
+            <label class="type-label"><input name="type" type="radio" data-id = '1' value="母婴" />母婴 </label> 
+            <label class="type-label"><input name="type" type="radio" data-id = '2' value="居家" />居家 </label> 
+            <label class="type-label"><input name="type" type="radio" data-id = '3' value="美食" />美食 </label> 
+            <label class="type-label"><input name="type" type="radio" data-id = '4' value="女装" />女装 </label> 
+            <label class="type-label"><input name="type" type="radio" data-id = '5' value="鞋包" />鞋包 </label> 
+            <label class="type-label"><input name="type" type="radio" data-id = '6' value="美妆" />美妆 </label> 
+            <label class="type-label"><input name="type" type="radio" data-id = '7' value="进口" />进口 </label> 
         </div>
         <span class="help-block"></span>
       </div>
@@ -37,7 +42,7 @@
         <label for="name" class="col-sm-2 control-label">商品名称</label>
 
         <div class="col-sm-10">
-          <input type="text" class="form-control" name="name" id="name" placeholder="请输入商品名称">
+          <input type="text" class="form-control" name="name" id="name" placeholder="请输入商品名称" value="<%- pos.name %>">
           <span class="help-block"></span>
         </div>
       </div>
@@ -45,7 +50,7 @@
         <label for="price" class="col-sm-2 control-label">商品价格</label>
 
         <div class="col-sm-10">
-          <input type="text" class="form-control" name="price" id="price" placeholder="请输入商品价格">
+          <input type="text" class="form-control" name="price" id="price" placeholder="请输入商品价格" value="<%- pos.price %>">
           <span class="help-block"></span>
         </div>
       </div>
@@ -53,17 +58,18 @@
         <label for="linePrice" class="col-sm-2 control-label">商品的划线价格</label>
 
         <div class="col-sm-10">
-          <input type="text" class="form-control" name="linePrice" id="linePrice" placeholder="请输入划线价格">
+          <input type="text" class="form-control" name="linePrice" id="linePrice" placeholder="请输入划线价格" value="<%- pos.linePrice %>">
           <span class="help-block"></span>
         </div>
       </div>
       <div class="form-group">
         <label for="channel" class="col-sm-2 control-label">商品的渠道</label>
-        <div class="col-sm-10">
-            <label class="type-label"><input name="channel" type="radio" checked value="9.9" />9.9 </label> 
-            <label class="type-label"><input name="channel" type="radio" value="限时秒杀" />限时秒杀 </label> 
-            <label class="type-label"><input name="channel" type="radio" value="新品特惠" />新品特惠 </label> 
-            <label class="type-label"><input name="channel" type="radio" value="今日特卖" />今日特卖 </label> 
+        <div class="col-sm-10 channel">
+            <label class="type-label"><input name="channel" type="radio" data-id = '0' value="全部"/>全部 </label> 
+            <label class="type-label"><input name="channel" type="radio" data-id = '1' value="9.9" />9.9 </label> 
+            <label class="type-label"><input name="channel" type="radio" data-id = '2' value="限时秒杀" />限时秒杀 </label> 
+            <label class="type-label"><input name="channel" type="radio" data-id = '3' value="新品特惠" />新品特惠 </label> 
+            <label class="type-label"><input name="channel" type="radio" data-id = '4' value="今日特卖" />今日特卖 </label> 
         </div>
         <span class="help-block"></span>
       </div>
@@ -85,21 +91,36 @@
               <input style="flex: 0.5" type="button" class="form-control" name="add" id="add-input" value="添加">
               <input style="flex: 0.5" type="button" class="form-control" name="add" id="rm-input" value="删除">
             </p>
+            {{if pos.goodsInfo.length > 0}}
+            {{each pos.goodsInfo v i}}
+            <p style="display: flex">
+              <input style="flex: 2" type="text" class="form-control goodsInfo" name="goodsInfo" value="<%- pos.goodsInfo[i].name %>" placeholder="例如: 颜色">
+              <input style="flex: 8" type="text" class="form-control goodsInfoGui" name="goodsInfoGui" value="<%- pos.goodsInfo[i].info%>" placeholder="例如: 红色,绿色">
+            </p>
+            {{/each}}
+            {{/if}}
         </div>
       </div>
       <div class="form-group">
         <label for="detail" class="col-sm-2 control-label">商品详情</label>
 
         <div class="col-sm-10">
-          <!-- <input type="text" class="form-control" name="detail" id="detail" placeholder="请输入商品详情"> -->
-          <textarea rows="4" cols="80" name="detail" id="detail">请填写详情信息</textarea>
+          <textarea rows="4" cols="80" name="detail" id="detail" value="<%- pos.detail %>">请填写详情信息</textarea>
           <span class="help-block"></span>
         </div>
       </div>
       <div class="form-group" id="form-imgUrl">
         <label for="imgUrl" class="col-sm-2 control-label">商品详情图片</label>
         <div class="col-sm-10 morefile">
-          <!-- "{{`http://localhost:3000/uploads/${pos.companyLogo}`}}" -->
+          {{if pos.imgUrl.length > 0}}
+          {{each pos.imgUrl v i}}
+          <div class="flexBox" data-id="0">
+            <img src="{{pos.imgUrl[i]}}">
+            <p class="aaron"><%- pos.moreName[i]%></p>
+            <i class="deleteImg deteleMore"></i>
+          </div>
+          {{/each}}
+          {{/if}}
           <div class="addMore" id="add-more">
             <input type="file" class="form-control" name="imgUrl" multiple id="imgUrl">
             <span class="help-block"></span>

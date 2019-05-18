@@ -302,17 +302,16 @@ const save = () => {
 const update = () => {
   return posUpdateTpl
 }
-// const update = async ({
-//   goodsId,
-//   type
-// }) => {
-//   const pos = (await posModel.listone({goodsId, type}))['data']
-//   let html = template.render(posUpdateTpl, {
-//     pos
-//   })
+const update = async ({
+  id
+}) => {
+  const pos = (await posModel.listone({id}))['data'][0]
+  let html = template.render(posUpdateTpl, {
+    pos
+  })
 
-//   return html
-// }
+  return html
+}
 
 export default {
   list,

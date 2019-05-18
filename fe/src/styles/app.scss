@@ -14,10 +14,28 @@ body {
   height:100px;
   margin-right: 10px;
   border: 1px #ccc solid;
+  position: relative;
 }
 .flexBox >img {
   width: 100%;
   height: 100%;
+}
+.flexBox >p{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.flexBox >.deleteImg {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  background: #000;
+  top: 0;
+  right: 0;
+  background: url('../static/images/close.png') no-repeat center center;
+  background-size: 100% 100%;
 }
 .addMore {
   width: 100px;

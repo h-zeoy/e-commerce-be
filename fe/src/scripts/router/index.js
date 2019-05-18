@@ -31,6 +31,15 @@ const register = () => {
       keywords,
       router
     }))
+    $(document).ready(function() {
+      var oTr = $('.tr-listData');
+      for (let i =0; i<oTr.length;i++) {
+        if (oTr[i].getAttribute('data-sale') === '0') {
+          let btn = $(oTr[i]).children().children()[1];
+          btn.setAttribute('disabled', false);
+        }
+      }
+    });
     goodsController.bindListEvents({router, req})
   })
 
@@ -59,20 +68,52 @@ const register = () => {
   })
 
   router.route('/update', async (req, res, next) => {
-    res.render(positionController.update())
     let {
       id,
-      pageNo
-    } = req.params
-    let {
+      pageNo,
       keywords = ''
     } = req.query
-    res.render(await positionController.update({
+    res.render(await goodsController.update({
       id
     }))
-    positionController.bindUpdateEvents({
+    $(document).ready(function() {
+      $('#reservationtime').daterangepicker({
+        timePicker: true, //显示时间
+        timePicker24Hour: true, //时间制
+        timePickerSeconds: true, //时间显示到秒
+        startDate: sessionStorage.getItem("saleTime"), //设置开始日期
+        endDate: sessionStorage.getItem("stopSaleTime"), //设置结束器日期
+        maxDate: moment(new Date().setFullYear(new Date().getFullYear()+1)), //设置最大日期
+        locale: {
+          format: "YYYY-MM-DD HH:mm:ss", //设置显示格式
+          applyLabel: '确定', //确定按钮文本
+          cancelLabel: '取消', //取消按钮文本
+        },
+      }, function (start, end, label) {
+        $('#reservationtime').html(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+        sessionStorage.setItem("saleTime", start.format('YYYY-MM-DD HH:mm:ss'));
+        sessionStorage.setItem("stopSaleTime", end.format('YYYY-MM-DD HH:mm:ss'));
+      });
+      var oRadio = $('.type').children().children();
+      for (let i = 0; i<oRadio.length; i++) {
+        if (oRadio[i].getAttribute('data-id') == sessionStorage.getItem('type')) {
+          oRadio[i].setAttribute('checked', true)
+        } else {
+          oRadio[i].setAttribute('disabled', false)
+        }
+      }
+      var oRadio2 = $('.channel').children().children();
+      for (let i = 0; i<oRadio2.length; i++) {
+        if (oRadio2[i].getAttribute('data-id') == sessionStorage.getItem('channel')) {
+          oRadio2[i].setAttribute('checked', true)
+        }
+      }
+    })
+    
+    goodsController.bindUpdateEvents({
       pageNo,
       router,
+      id,
       keywords
     })
   })
