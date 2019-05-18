@@ -60,22 +60,21 @@ const register = () => {
 
   router.route('/update', async (req, res, next) => {
     res.render(positionController.update())
-    console.log(4432);
-    // let {
-    //   id,
-    //   pageNo
-    // } = req.params
-    // let {
-    //   keywords = ''
-    // } = req.query
-    // res.render(await positionController.update({
-    //   id
-    // }))
-    // positionController.bindUpdateEvents({
-    //   pageNo,
-    //   router,
-    //   keywords
-    // })
+    let {
+      id,
+      pageNo
+    } = req.params
+    let {
+      keywords = ''
+    } = req.query
+    res.render(await positionController.update({
+      id
+    }))
+    positionController.bindUpdateEvents({
+      pageNo,
+      router,
+      keywords
+    })
   })
 
   router.route('*', (req, res, next) => {
