@@ -46,6 +46,7 @@ const cloneupload = ({imgData, imgName}) => {
                 // 文件上传
                 formUploader.putFile(uploadToken, key, localFile, putExtra, function (respErr,
                     respBody, respInfo) {
+                        console.log(respErr);
                     if (respErr) {
                         reject({
                             status: '-1',

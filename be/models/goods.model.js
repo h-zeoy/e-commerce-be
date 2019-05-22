@@ -269,7 +269,6 @@ const update = (data) => {
         saleTime, stopSaleTime, goodsInfo,
         imgUrl, detail, channel
     } = data;
-    console.log(name,id);
     var flag = true;
     let sqlArr = [`UPDATE all_goods SET updateTime = '${updateTime}', saleTime = '${saleTime}', stopSaleTime = '${stopSaleTime}' where goodsId = '${id}'`,
     `UPDATE list_data SET name = '${name}', thumbnailUrl = '${thumbnailUrl}', price = '${price}',linePrice = '${linePrice}', channel = '${channel}' where lid = (select aid  from all_goods where goodsId = '${id}')`,
@@ -312,7 +311,6 @@ const update = (data) => {
         return flag;
     })
 }
-
 
 module.exports = {
     listall,

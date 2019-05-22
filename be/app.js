@@ -6,10 +6,10 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var positionRouter = require('./routes/position')
+// var positionRouter = require('./routes/baby')
 var qiniuRouter = require('./routes/qiniu')
 var goodsRouter = require('./routes/goods')
-
+var babyRouter = require('./routes/baby')
 var app = express();
 var bodyParser = require('body-parser');
 //handle request entity too large
@@ -28,7 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 
 app.use('/api/users', usersRouter);
-app.use('/api/position', positionRouter)
+app.use('/api/baby', babyRouter);
+// app.use('/api/position', positionRouter)
 app.use('/api/qiniu', qiniuRouter)
 app.use('/api/goods', goodsRouter)
 
