@@ -14,7 +14,7 @@ const codeModel = require('../models/code.model');
 const getUid = async (req, res, next) => {
   let _ = await userModel.getUid();
   let uid = 700000;
-  _[0].id ? uid = Number(_[0].id) + 1 : ''
+  _[0].id ? uid = Number(_[0].id) + 1 : '';
   return uid;
 }
 
@@ -57,9 +57,25 @@ const signup = async (req, res, next) => {
       params['username'] = username;
       params['password'] = await genBcryptPwd(password);
     } else {
-      params['tel'] = tel;
-      params['code'] = code;
-      params['password'] = await genBcryptPwd(code);
+      // 在验证一次短信 验证完毕在注册
+      let { tel, TemplateCode, code } = req.body;
+      let SendDate = getyyyyMMdd();
+      console.log(tel, SendDate, TemplateCode, code);
+      let sec = await codeModel.getDetail(tel, SendDate, TemplateCode, code);
+      if (sec.flag) {
+        // console.log(sec.data.OutId);
+        console.log(sec.data.OutId);
+        params['tel'] = tel;
+        params['code'] = code;
+        params['password'] = await genBcryptPwd(code);
+      } else {
+        res.render('user.view.ejs', {
+          success: JSON.stringify(false),
+          data: JSON.stringify(sec.msg),
+          code: JSON.stringify(1),
+        })
+        return ;
+      }
     }
     let result = await userModel.save(way, params);
     if (result) {
@@ -142,7 +158,6 @@ const isPass = async (req, res, next) => {
 const signin = async (req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.header('Content-Type', 'application/json; charset=utf8');
-  // 
   /*
   way === 1 密码登录 
   用户名 密码
@@ -156,6 +171,7 @@ const signin = async (req, res, next) => {
   手机号 判断 有没有密码 没有密码 弹出 手机号验证登录  有密码 根据手机号 找到 密码
 
    */
+  console.log('ddd', req);
   let {
     tel,
     password,
@@ -163,7 +179,9 @@ const signin = async (req, res, next) => {
     code,
     TemplateCode
   } = req.body
+  console.log(TemplateCode);
   if (String(req.body.way) === '1') {
+    
     if (/^[0-9]+$/.test(tel)) {
       let _ = await telSign(tel, password);
       _.flag ?
@@ -208,8 +226,8 @@ const signin = async (req, res, next) => {
     console.log('验证码登录');
     // 先判断手机号是否存在
     let _ = await telCodeSign(tel, code, TemplateCode);
+    
     if (_.flag) {
-      console.log(_);
       res.render('user.view.ejs', {
         success: JSON.stringify(true),
         data: JSON.stringify({
@@ -242,7 +260,7 @@ async function telCodeSign(tel, code, TemplateCode) {
       // console.log(sec.data.OutId);
       let _ = await userModel.sectelcode(tel);
       let password = String(_.code);
-      let userPassword = _.password;
+      let userPassword = _.codePass;
       if (await comparePassword({
           password,
           userPassword
@@ -311,6 +329,11 @@ async function userSign(username, password) {
 }
 async function telSign(tel, password) {
   // 判断手机号是否存在 
+  let randomUser = '';
+  for(var i=0;i<6;i++) {
+    randomUser += Math.floor(Math.random()*10);
+  }
+  randomUser = '木淘用户'+ randomUser;
   let _ = await userModel.findOne(2, tel);
   var flag = false;
   if (_.length === 0) {
@@ -332,6 +355,7 @@ async function telSign(tel, password) {
           token,
           tel,
           flag,
+          randomUser
         }
       } else {
         return {
@@ -385,7 +409,7 @@ module.exports = {
   signin,
   getUid,
   isPass,
-  addPass
+  addPass,
 }
 
 function getyyyyMMdd() {

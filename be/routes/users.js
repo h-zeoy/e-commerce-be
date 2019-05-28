@@ -27,4 +27,6 @@ router.post('/isPass', userController.isPass)
 
 // 查询短信
 router.post('/seccode', codeController.getDetail)
+
+
 module.exports = router;

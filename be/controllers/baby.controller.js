@@ -45,7 +45,7 @@ const todaysale = async(req, res, next) => {
   } else {
     res.render('baby.view.ejs', {
       success: JSON.stringify(false),
-      data: JSON.stringify({msg: 请求失败}),
+      data: JSON.stringify({msg: '请求失败'}),
       code: JSON.stringify(1)
     })
   }

@@ -10,6 +10,8 @@ var usersRouter = require('./routes/users');
 var qiniuRouter = require('./routes/qiniu')
 var goodsRouter = require('./routes/goods')
 var babyRouter = require('./routes/baby')
+var addressRouter = require('./routes/address')
+// var addressRouter = require('./routes/address');
 var app = express();
 var bodyParser = require('body-parser');
 //handle request entity too large
@@ -25,18 +27,29 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// var allowCrossDomain = function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST');
+//   res.header('Access-Control-Allow-Headers', 'content-Type');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+// }
+// app.use(allowCrossDomain);
+
 app.use('/', indexRouter);
 
 app.use('/api/users', usersRouter);
 app.use('/api/baby', babyRouter);
-// app.use('/api/position', positionRouter)
 app.use('/api/qiniu', qiniuRouter)
 app.use('/api/goods', goodsRouter)
+app.use('/api/address', addressRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
+
 
 // error handler
 app.use(function(err, req, res, next) {

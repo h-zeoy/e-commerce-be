@@ -19,7 +19,7 @@ const send = async (tel, TemplateCode) => {
         PhoneNumbers: tel, //发送的电话号码
         SignName: '木淘网', //认证签名
         TemplateCode, //模板id SMS_165676756
-        TemplateParam: '{"code":"' + number + '"}' //特别注意，这里的参数名
+        TemplateParam: '{"code":"' + number + '"}'
     });
     return _;
 };
@@ -35,16 +35,18 @@ const getDetail = async (tel, SendDate, TemplateCode, code) => {
         SmsSendDetailDTOs,
         TotalCount
     } = _;
-    if (Code === 'OK') {
+    var flag = false;
+    if (Code === 'OK' && TotalCount!=0) {
         const SendDate = new Date(SmsSendDetailDTOs.SmsSendDetailDTO[0].SendDate);
         const endDate = SendDate.setMinutes(SendDate.getMinutes() + 15);
         const nowDate = new Date().getTime();
-        var flag = false;
         var index  = 0;
-        // console.log(SmsSendDetailDTOs);
+        console.log(TemplateCode, SmsSendDetailDTOs.SmsSendDetailDTO[0].TemplateCode);
         if (endDate >= nowDate) {
+            
             for (let i = 0; i< Number(TotalCount); i++ ) {
-                if (SmsSendDetailDTOs.SmsSendDetailDTO[i].OutId === code && SmsSendDetailDTOs.SmsSendDetailDTO[0].TemplateCode === TemplateCode) {
+                if (SmsSendDetailDTOs.SmsSendDetailDTO[i].OutId === code && SmsSendDetailDTOs.SmsSendDetailDTO[i].TemplateCode === TemplateCode) {
+                    
                     flag = true;
                     index = i;
                 }
@@ -61,11 +63,8 @@ const getDetail = async (tel, SendDate, TemplateCode, code) => {
                 msg: '请重新获取验证码'
             }
         }
-    } else {
-        return {
-            flag,
-            msg: sec.sec.Message
-        }
+    }  else {
+        return TotalCount == 0 ? { flag, msg: '请重新获取验证码' } : { flag, msg: _.Message }
     }
 }
 
