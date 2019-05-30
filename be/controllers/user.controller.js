@@ -103,7 +103,7 @@ const addPass = async (req, res, next) => {
     tel,
     password
   } = req.body;
-  let uid = (await userModel.secUid(tel))[0].uid;
+  let uid = (await userModel.secUid('tel', tel))[0].uid;
   password = await genBcryptPwd(password);
   let _ = await userModel.addPass(uid, password);
   if (_) {
@@ -171,7 +171,6 @@ const signin = async (req, res, next) => {
   手机号 判断 有没有密码 没有密码 弹出 手机号验证登录  有密码 根据手机号 找到 密码
 
    */
-  console.log('ddd', req);
   let {
     tel,
     password,
@@ -179,9 +178,7 @@ const signin = async (req, res, next) => {
     code,
     TemplateCode
   } = req.body
-  console.log(TemplateCode);
   if (String(req.body.way) === '1') {
-    
     if (/^[0-9]+$/.test(tel)) {
       let _ = await telSign(tel, password);
       _.flag ?
@@ -202,6 +199,7 @@ const signin = async (req, res, next) => {
         })
     } else {
       let _ = await userSign(username, password);
+      console.log(username, password);
       if (_.flag) {
         res.render('user.view.ejs', {
           success: JSON.stringify(true),
@@ -300,8 +298,7 @@ async function userSign(username, password) {
   var flag = false;
   if (_.length !== 0) {
     flag = true;
-    let userPassword = _[0].password;
-    console.log(_[0], 'user');
+    let userPassword = _[0].userPass;
     if (await comparePassword({
         password,
         userPassword

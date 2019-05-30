@@ -82,7 +82,7 @@ const save = async (req, res, next) => {
   switch(channel) {
     case '全部': codeChannel = '00', channelVal = 0; break;
     case '9.9包邮': codeChannel = '11', channelVal = 1; break;
-    case '限时秒杀': codeChannel = '22', channelVal = 2; break;
+    case '品牌清仓': codeChannel = '22', channelVal = 2; break;
     case '新品特惠': codeChannel = '33', channelVal = 3; break;
     case '今日特卖': codeChannel = '44', channelVal = 4; break;
   }
@@ -124,7 +124,7 @@ const update = async (req, res, next) => {
   switch(channel) {
     case '全部': codeChannel = '00', channelVal = 0; break;
     case '9.9包邮': codeChannel = '11', channelVal = 1; break;
-    case '限时秒杀': codeChannel = '22', channelVal = 2; break;
+    case '品牌清仓': codeChannel = '22', channelVal = 2; break;
     case '新品特惠': codeChannel = '33', channelVal = 3; break;
     case '今日特卖': codeChannel = '44', channelVal = 4; break;
   }

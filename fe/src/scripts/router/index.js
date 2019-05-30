@@ -46,6 +46,9 @@ const register = () => {
   router.route('/save', (req, res, next) => {
     res.render(goodsController.save())
     $(document).ready(function() {
+      if($(':radio[name="channel"]:checked').val() !== '品牌清仓') {
+        $('#zhekou').attr("disabled", true);
+      }
       $('#reservationtime').daterangepicker({
         timePicker: true, //显示时间
         timePicker24Hour: true, //时间制

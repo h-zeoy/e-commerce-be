@@ -100,10 +100,10 @@ const getUid = (username) => {
 }
 
 // 查询uid
-const secUid = (tel) => {
+const secUid = (str, tel) => {
   return new Promise((resolve, reject) => {
     db.pool.getConnection((err, connection) => {
-        err ? reject(err) : connection.query( `select uid from users where tel = '${tel}'` , (err, result) => {
+        err ? reject(err) : connection.query( `select id from userInfo where ${str} = '${tel}'` , (err, result) => {
             err ? reject(err) : resolve(result);
             connection.release();
         })

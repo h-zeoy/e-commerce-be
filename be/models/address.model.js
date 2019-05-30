@@ -44,7 +44,7 @@ const add = (data) => {
               reject(err);
               return;
             }).then((result) => {
-              console.log('第一次插入成功!');
+              console.log('用户表成功!');
               callback(null, result);
             })
           }
@@ -54,7 +54,7 @@ const add = (data) => {
               reject(err);
               return;
             }).then((result) => {
-              console.log('第二次插入成功!');
+              console.log('地址表成功!');
               callback(null, result);
             })
           }
@@ -77,33 +77,34 @@ const add = (data) => {
               } else {
                 resolve(result);
               }
-
+  
               console.log('成功,提交!');
               //释放资源
               connection.release();
             });
           })
-        })
+        });
       } else {
-        console.log(12323);
         connection.query(`UPDATE address SET addressInfo = '${addressInfo}', updateTime = '${createTime}' WHERE id = ${addressId}`, (err, result) => {
-          err ? reject(err) : resolve(result);
+          if (err) {
+            reject(err)
+          }else {
+            resolve(result)
+          }
           connection.release();
         })
       }
-
     })
+  }).then((result) => {
+    // console.log(result)
+    return {
+      flag: true
+    }
   }).catch((err) => {
     console.log(err);
     return {
       flag: false,
-      err,
-    }
-  }).then((result) => {
-    console.log(result);
-    return {
-      flag: true,
-      result,
+      err
     }
   })
 }
@@ -143,6 +144,7 @@ const selectInfo = (id) => {
 }
 
 const update = (id, addressInfo) => {
+  console.log(id, addressInfo);
   let sql = `UPDATE address SET addressInfo = '${addressInfo}' where id = ${id}`;
   return new Promise((resolve, reject) => {
     db.pool.getConnection((err, connection) => {

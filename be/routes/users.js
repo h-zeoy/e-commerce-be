@@ -4,6 +4,8 @@ var router = express.Router();
 const userController = require('../controllers/user.controller')
 
 const codeController = require('../controllers/code.controller')
+
+
 // 注册
 router.post('/signup', userController.signup)
 

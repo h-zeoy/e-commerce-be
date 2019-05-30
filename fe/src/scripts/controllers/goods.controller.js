@@ -23,29 +23,58 @@ var moreName = []
 const _handleAddSubmitClick = async() => {
   let params = {};
   var goodsInfo = [];
+  let flag = false;
   if (!cloneImg) {
     $('#thumbnailUrl-group').addClass('has-error');
     $("#thumbnailUrl-group").find('span[class^="help-block"]').text("请上传图片");
+  } else {
+    $('#thumbnailUrl-group').parent().parent().removeClass('has-error')
+    $('#thumbnailUrl-group').parent().parent().find('span[class^="help-block"]').text("");
   }
   if ($('#name').val() === '') {
     $('#name').parent().parent().addClass('has-error')
     $('#name').parent().parent().find('span[class^="help-block"]').text("请输入商品名称");
+  } else {
+    $('#name').parent().parent().removeClass('has-error')
+    $('#name').parent().parent().find('span[class^="help-block"]').text("");
   }
   if ($('#price').val() === '') {
     $('#price').parent().parent().addClass('has-error')
     $('#price').parent().parent().find('span[class^="help-block"]').text("请输入商品价格");
+  } else {
+    $('#price').parent().parent().removeClass('has-error')
+    $('#price').parent().parent().find('span[class^="help-block"]').text("");
   }
   if ($('#linePrice').val() === '') {
     $('#linePrice').parent().parent().addClass('has-error')
     $('#linePrice').parent().parent().find('span[class^="help-block"]').text("请输入商品原价格");
+  } else {
+    $('#linePrice').parent().parent().removeClass('has-error')
+    $('#linePrice').parent().parent().find('span[class^="help-block"]').text("");
   }
   if ($('#detail').val() === '') {
     $('#detail').parent().parent().addClass('has-error')
     $('#detail').parent().parent().find('span[class^="help-block"]').text("请输入商品详情");
+  } else {
+    $('#detail').parent().parent().removeClass('has-error')
+    $('#detail').parent().parent().find('span[class^="help-block"]').text("");
   }
   if (moreImg.length === 0) {
     $('#form-imgUrl').addClass('has-error');
     $("#form-imgUrl").find('span[class^="help-block"]').text("请上传图片");
+  } else {
+    $('#form-imgUrl').parent().parent().removeClass('has-error')
+    $('#form-imgUrl').parent().parent().find('span[class^="help-block"]').text("");
+  }
+  if ($(':radio[name="channel"]:checked').val() === '品牌清仓') {
+    if ($('#zhekou').val()!=='' && $('#zhekou').val() <10) {
+      params['zhekou'] = $('#zhekou').val();
+      $('#zhekou').parent().parent().removeClass('has-error')
+      $('#zhekou').parent().parent().find('span[class^="help-block"]').text("");
+    } else {
+      $('#zhekou').parent().parent().addClass('has-error')
+      $('#zhekou').parent().parent().find('span[class^="help-block"]').text("请输入折扣，并且不大于10");
+    }
   }
   params['thumbnailUrl'] =cloneImg;
   params['imgUrl'] =moreImg;
@@ -57,10 +86,15 @@ const _handleAddSubmitClick = async() => {
   params['saleTime'] = sessionStorage.getItem('saleTime');
   params['stopSaleTime'] = sessionStorage.getItem('stopSaleTime');
   $("input[name='goodsInfo']").map(function(index, item) {
-    goodsInfo[index] = {name: $(item).val().replace(/\s+/g,"").split(","), info: $(this).siblings().val().replace(/\s+/g,"").split(",")}
+    goodsInfo[index] = {
+      name: $(item).val().replace(/\s+/g,"").split(","),
+      info: $($(this).siblings()[0]).val().replace(/\s+/g,"").split(","),
+      stock: $($(this).siblings()[1]).val().replace(/\s+/g,"").split(","),
+    }
   })
   params['goodsInfo'] =  JSON.stringify(goodsInfo);
   params['channel'] =$(':radio[name="channel"]:checked').val();
+  
   let result = await posModel.save(params);
   alert(result.data.msg);
 }
@@ -177,6 +211,9 @@ const bindSaveEvents = (router) => {
   $('#rm-input').on('click', _handleRmInput)
   $('#cloneUpload').on('click', _handleCloneUpload)
   $('#moreUpload').on('click', _handleMoreUpload)
+  $('#channel').on('click', _handleChannel)
+  $('#zhekou').on('blur', _handleBlur)
+  $('#linePrice').on('blur',_handleLineBlur)
   $('.img-group').on('click', function(event) {
     var reg = new RegExp('deteleClone');
     var clone = reg.test(event.target.className)
@@ -196,7 +233,8 @@ const bindSaveEvents = (router) => {
 const _handleAddInput = function() {
   var el = $(`<p style="display: flex">
     <input style="flex: 2" type="text" class="form-control goodsInfo" name="goodsInfo"  placeholder="例如: 颜色">
-    <input style="flex: 8" type="text" class="form-control goodsInfoGui" name="goodsInfoGui"  placeholder="例如: 红色,绿色">
+    <input style="flex: 4" type="text" class="form-control goodsInfoGui" name="goodsInfoGui"  placeholder="例如: 红色,绿色">
+    <input style="flex: 4" type="text" class="form-control goodsInfoKuCun" name="goodsInfoKuCun"  placeholder="例如: 库存">
   </p>`)
   $('#add-el-input').append(el) 
 }
@@ -239,6 +277,35 @@ const _handleMoreUpload = async function() {
     }
   } else {
     alert('请选择图片');
+  }
+}
+
+const _handleChannel = function(e) {
+  if (e.target.value === '品牌清仓') {
+    $('#zhekou').attr("disabled", false);
+    $('#price').val("");
+    $('#price').attr("disabled", true);
+  } else {
+    $('#zhekou').val('');
+    $('#zhekou').attr("disabled", true);
+    $('#price').attr("disabled", false);
+  }
+}
+
+
+
+const _handleBlur = function() {
+  if($('#linePrice').val()!=='' && $('#zhekou').val()!=='' && Number($('#zhekou').val()) < 10){
+    var price = Number($('#linePrice').val()) * Number($('#zhekou').val()/10);
+    $('#price').val(Math.floor(price.toFixed(2)))
+
+  }
+}
+
+const _handleLineBlur = function() {
+  if($('#linePrice').val()!=='' && $('#zhekou').val()!=='' && Number($('#zhekou').val()) < 10){
+   var price = Number($('#linePrice').val()) * Number($('#zhekou').val()/10);
+   $('#price').val(Math.floor(price.toFixed(2)))
   }
 }
 
@@ -288,6 +355,7 @@ const bindUpdateEvents = ({
   $('#thumbnailUrl').on("change", _handleAddClone)
   $('#cloneUpload').on('click', _handleCloneUpload)
   $('#moreUpload').on('click', _handleMoreUpload)
+  // $('#zhekou').on('focus', _handleFocus)
   $('.deteleClone').on('click', function() {
     $(this).parent().remove();
     cloneImg = '',

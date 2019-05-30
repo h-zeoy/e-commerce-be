@@ -56,9 +56,15 @@
       </div>
       <div class="form-group">
         <label for="linePrice" class="col-sm-2 control-label">商品的划线价格</label>
-
         <div class="col-sm-10">
           <input type="text" class="form-control" name="linePrice" id="linePrice" placeholder="请输入划线价格" value="<%- pos.linePrice %>">
+          <span class="help-block"></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="zhekou" class="col-sm-2 control-label">请输入折扣</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="zhekou" id="zhekou" placeholder="请输入折扣" value="<%- pos.zhekou %>">
           <span class="help-block"></span>
         </div>
       </div>
@@ -67,7 +73,7 @@
         <div class="col-sm-10 channel">
             <label class="type-label"><input name="channel" type="radio" data-id = '0' value="全部"/>全部 </label> 
             <label class="type-label"><input name="channel" type="radio" data-id = '1' value="9.9" />9.9 </label> 
-            <label class="type-label"><input name="channel" type="radio" data-id = '2' value="限时秒杀" />限时秒杀 </label> 
+            <label class="type-label"><input name="channel" type="radio" data-id = '2' value="品牌清仓" />品牌清仓 </label> 
             <label class="type-label"><input name="channel" type="radio" data-id = '3' value="新品特惠" />新品特惠 </label> 
             <label class="type-label"><input name="channel" type="radio" data-id = '4' value="今日特卖" />今日特卖 </label> 
         </div>

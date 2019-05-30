@@ -91,7 +91,7 @@ const list = ({
             }
             switch(item.channel) {
                 case 0: channelVal = '9.9包邮'; break;
-                case 1: channelVal = '限时秒杀'; break;
+                case 1: channelVal = '品牌清仓'; break;
                 case 2: channelVal = '新品特惠'; break;
                 case 3: channelVal = '今日特卖'; break;
             }
