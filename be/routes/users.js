@@ -5,6 +5,7 @@ const userController = require('../controllers/user.controller')
 
 const codeController = require('../controllers/code.controller')
 
+const authMiddleware = require('../middlewares/auth.js')
 
 // 注册
 router.post('/signup', userController.signup)
@@ -29,6 +30,9 @@ router.post('/isPass', userController.isPass)
 
 // 查询短信
 router.post('/seccode', codeController.getDetail)
+
+//获取最大uid
+router.post('/pass', authMiddleware.auth, userController.pass)
 
 
 module.exports = router;

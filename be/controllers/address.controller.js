@@ -11,7 +11,12 @@ const getaddressId = async (req, res, next) => {
 
 const list = async(username, req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    let uid = (await usersModel.secUid('username', username))[0];
+    let uid = {};
+    if(/^[0-9]+$/.test(username)) {
+        uid = (await usersModel.secUid('tel', username))[0];
+    } else {
+        uid = (await usersModel.secUid('username', username))[0];
+    }
     let addressId = (await addressModel.selectId(uid.id))[0].addressId;
     let _  = (await addressModel.selectInfo(addressId));
     if (_.flag) {
@@ -41,7 +46,12 @@ const add = async(username,req, res, next) => {
     let addressId = '';
     let params = {};
     let addressInfo = req.body;
-    let uid = (await usersModel.secUid('username', username))[0];
+    let uid = {}
+    if(/^[0-9]+$/.test(username)) {
+        uid = (await usersModel.secUid('tel', username))[0];
+    } else {
+        uid = (await usersModel.secUid('username', username))[0];
+    }
     addressId = (await addressModel.selectId(uid.id))[0].addressId;params['uid'] = uid.id;
     // 从未添加过地址 
     if (!addressId) {
@@ -105,7 +115,12 @@ const update = async(username, req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers','x-access-token');
     let addressInfo = req.body;
     let flag =false;
-    let uid = (await usersModel.secUid('username', username))[0];
+    let uid = {}
+    if(/^[0-9]+$/.test(username)) {
+        uid = (await usersModel.secUid('tel', username))[0];
+    } else {
+        uid = (await usersModel.secUid('username', username))[0];
+    }
     let addressId = (await addressModel.selectId(uid.id))[0].addressId;
     let _ = (await addressModel.selectInfo(addressId));
     let newArr = JSON.parse(_.result.addressInfo);
@@ -146,7 +161,12 @@ const remove = async(username, req, res, next) => {
     let { id } = req.query;
     let flag = true;
     let index = 0;
-    let uid = (await usersModel.secUid('username', username))[0];
+    let uid = {}
+    if(/^[0-9]+$/.test(username)) {
+        uid = (await usersModel.secUid('tel', username))[0];
+    } else {
+        uid = (await usersModel.secUid('username', username))[0];
+    }
     let addressId = (await addressModel.selectId(uid.id))[0].addressId;
     let _  = (await addressModel.selectInfo(addressId));
     if (_.flag) {

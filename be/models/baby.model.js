@@ -7,9 +7,9 @@ const todaysale = (
   console.log(channel, type);
   let sql = '';
   if (type !== '') {
-    sql = `select a.*, b.name,  b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale from all_goods a left join list_data b on a.aid = b.lid where channel = ${channel} AND type=${type}`;
+    sql = `select a.*, b.name,  b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale from goods a left join list_data b on a.aid = b.lid where channel = ${channel} AND type=${type}`;
   } else {
-    sql = `select a.*, b.name,  b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale from all_goods a left join list_data b on a.aid = b.lid where channel = ${channel}`;
+    sql = `select a.*, b.name,  b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale from goods a left join list_data b on a.aid = b.lid where channel = ${channel}`;
   }
     return new Promise((resolve, reject) => {
         db.pool.getConnection((err, connection) => {
@@ -35,7 +35,7 @@ const todaysale = (
 const listone = ({
   id
 }) => {
-  let sql = `select a.*,  b.name, b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale, c.goodsInfo, c.detail, c.person, c.imgUrl from( select * from all_goods a where goodsId = '${id}') a left join list_data b on a.aid = b.lid left join list_detail c on c.ldid = a.aid`;
+  let sql = `select a.*,  b.name, b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale, c.goodsInfo, c.detail, c.person, c.imgUrl from( select * from goods a where goodsId = '${id}') a left join list_data b on a.aid = b.lid left join list_detail c on c.ldid = a.aid`;
   return new Promise((resolve, reject) => {
       db.pool.getConnection((err, connection) => {
           if (err) {
@@ -53,7 +53,10 @@ const listone = ({
           connection.release();
       })
   }).then((_) => {
-      return _;
+      var result = (JSON.parse(JSON.stringify(_)))[0];
+      var goodsInfo = JSON.parse(result.goodsInfo);
+      result['goodsInfo'] = goodsInfo;
+      return result;
   })
 };
 
@@ -61,7 +64,7 @@ const listone = ({
 const listall = ({
   keywords
 }) => {
-    let sql = `select a.*, b.name,  b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale from all_goods a left join list_data b on a.aid = b.lid where name like '%${keywords}%'`;
+    let sql = `select a.*, b.name,  b.thumbnailUrl, b.price, b.linePrice, b.code, b.channel, b.sale from goods a left join list_data b on a.aid = b.lid where name like '%${keywords}%'`;
     return new Promise((resolve, reject) => {
         db.pool.getConnection((err, connection) => {
             if (err) {
@@ -88,7 +91,7 @@ const list = ({
     pageSize,
     keywords
 }) => {
-    let sql = `select a.*, b.name,  b.thumbnailUrl, b.price, b.linePrice, b.code, b.sale, b.channel from all_goods a 
+    let sql = `select a.*, b.name,  b.thumbnailUrl, b.price, b.linePrice, b.code, b.sale, b.channel from goods a 
     left join list_data b on a.aid = b.lid where name like '%${keywords}%' limit ${(pageNo - 1) * pageSize}, ${pageSize}`;
     return new Promise((resolve, reject) => {
         db.pool.getConnection((err, connection) => {

@@ -85,18 +85,27 @@ const _handleAddSubmitClick = async() => {
   params['type'] =$(':radio[name="type"]:checked').val();
   params['saleTime'] = sessionStorage.getItem('saleTime');
   params['stopSaleTime'] = sessionStorage.getItem('stopSaleTime');
-  $("input[name='goodsInfo']").map(function(index, item) {
-    goodsInfo[index] = {
-      name: $(item).val().replace(/\s+/g,"").split(","),
-      info: $($(this).siblings()[0]).val().replace(/\s+/g,"").split(","),
-      stock: $($(this).siblings()[1]).val().replace(/\s+/g,"").split(","),
-    }
-  })
-  params['goodsInfo'] =  JSON.stringify(goodsInfo);
-  params['channel'] =$(':radio[name="channel"]:checked').val();
-  
-  let result = await posModel.save(params);
-  alert(result.data.msg);
+  var skuTitle = String($('#sku-title').val()).split(',');
+  var aSku = $(".sku-info").children();
+  var goodsInfo = {};
+  var info = {};
+  for (var i=0;i<aSku.length;i++) {
+    var title = $(aSku[i]).attr("placeholder");
+    info[title] = ($(aSku[i]).val()).split(',');
+  }
+  var aStock = $('.sku-stock');
+  var stock = [];
+  for (var i=0;i<aStock.length;i++) {
+    stock.push(($($(aStock[i]).children()[0]).val()).split(','));
+  }
+  goodsInfo['title'] = skuTitle;
+  goodsInfo['info'] = info;
+  goodsInfo['stock'] = stock;
+  console.log(JSON.stringify(goodsInfo));
+  // params['goodsInfo'] =  JSON.stringify(goodsInfo);
+  // params['channel'] =$(':radio[name="channel"]:checked').val();
+  // let result = await posModel.save(params);
+  // alert(result.data.msg);
 }
 
 function modifySubmitData () {
@@ -230,12 +239,24 @@ const bindSaveEvents = (router) => {
   })
   
 }
+var index = 1;
 const _handleAddInput = function() {
-  var el = $(`<p style="display: flex">
-    <input style="flex: 2" type="text" class="form-control goodsInfo" name="goodsInfo"  placeholder="例如: 颜色">
-    <input style="flex: 4" type="text" class="form-control goodsInfoGui" name="goodsInfoGui"  placeholder="例如: 红色,绿色">
-    <input style="flex: 4" type="text" class="form-control goodsInfoKuCun" name="goodsInfoKuCun"  placeholder="例如: 库存">
-  </p>`)
+  var num = String($('#sku-title').val()).split(',');
+  var str = '';
+  for (var i=0;i<num.length;i++) {
+    str += `<input style="flex: 1" type="text" class="form-control goodsInfo" name="goodsInfo"  placeholder="${num[i]}">`
+  }
+  var el = index === 1 ?$(`<p class="sku-info" style="display: flex">
+    ${str}
+    <input style="flex: 1" type="text" class="form-control goodsInfo" name="goodsInfo"  placeholder="图片">
+  </p><p class="sku-stock" style="display: flex">
+  <input style="flex: 1" type="text" class="form-control goodsInfo" name="goodsInfo"  placeholder="库存"></input>
+</p>`) :  $(`<p class="sku-stock" style="display: flex">
+<input style="flex: 1" type="text" class="form-control goodsInfo" name="goodsInfo"  placeholder="库存"></input>
+</p>`);
+console.log();
+  index += 1;
+  
   $('#add-el-input').append(el) 
 }
 

@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var cors=require('cors');
+// var cors=require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -12,6 +12,7 @@ var qiniuRouter = require('./routes/qiniu')
 var goodsRouter = require('./routes/goods')
 var babyRouter = require('./routes/baby')
 var addressRouter = require('./routes/address')
+var orderRouter = require('./routes/order')
 // var addressRouter = require('./routes/address');
 var app = express();
 var bodyParser = require('body-parser');
@@ -36,6 +37,7 @@ app.use('/api/baby', babyRouter);
 app.use('/api/qiniu', qiniuRouter)
 app.use('/api/goods', goodsRouter)
 app.use('/api/address', addressRouter)
+app.use('/api/order', orderRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

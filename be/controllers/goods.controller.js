@@ -40,10 +40,11 @@ const listall = async (req, res, next) => {
 const listone = async (req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); 
   let { id } = req.query;
-  console.log(id);
   res.header('Content-Type', 'application/json; charset=utf8')
   let result = await goodsModel.listone({id});
+  console.log(result);
   if (result.length!==0) {
+    
     res.render('goods.view.ejs', {
       success: JSON.stringify(true),
       data: JSON.stringify(result),

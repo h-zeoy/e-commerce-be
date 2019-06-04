@@ -10,12 +10,12 @@ const save = async (str, data) => {
     let { uid, username, password, createTime } = data;
     sqlArr = [
       `insert into users (uid, createTime, updateTime)values (${uid}, '${createTime}', '${createTime}')`,
-      `insert into userInfo (id, username, userPass)values (${uid}, '${username}', '${password}')`]
+      `insert into userInfo (id, username, userPass, money)values (${uid}, '${username}', '${password}', '0')`]
   } else {
     let { uid, tel, code, password, createTime } = data;
     sqlArr = [
       `insert into users (uid, createTime, updateTime)values (${uid}, '${createTime}', '${createTime}')`,
-      `insert into userInfo (id, tel, code, codePass)values (${uid}, '${tel}', ${code}, '${password}')`]
+      `insert into userInfo (id, tel, code, codePass, money)values (${uid}, '${tel}', ${code}, '${password}', '0')`]
   }
   var flag = true;
   return new Promise((resolve, reject) => {
@@ -109,9 +109,63 @@ const secUid = (str, tel) => {
         })
     })
   }).then((result) => {
+    console.log('result', str,tel);
     var dataString = JSON.stringify(result);
     var result = JSON.parse(dataString);
     return result;
+  })
+}
+
+// 修改金额
+const deMoney = (uid, money) => {
+  return new Promise((resolve, reject) => {
+    db.pool.getConnection((err, connection) => {
+      if (err) {
+        reject(err)
+      }
+      db.query(`update userinfo set money='${money}'   where id = ${uid}`).catch((err) => {
+        callback(err, null);
+        reject(err);
+        return;
+      }).then((result) => {
+        connection.commit(function (err, result) {
+          if (err) {
+            reject(err);
+            return;
+          } else {
+            resolve(result);
+          }
+          console.log('成功,提交!');
+          //释放资源
+          connection.release();
+        })
+      })
+    })
+  }).then((result) => {
+    var dataString = JSON.stringify(result);
+    var result = JSON.parse(dataString);
+    return {
+      result,
+      flag: true
+    };
+  })
+}
+
+// 修改金额
+const selectMoney = (uid) => {
+  return new Promise((resolve, reject) => {
+    db.pool.getConnection((err, connection) => {
+      err ? reject(err) : connection.query( `select money from userinfo   where id = ${uid}` , (err, result) => {
+          err ? reject(err) : resolve(result);
+          connection.release();
+      })
+    })
+  }).then((result) => {
+    
+    var dataString = JSON.stringify(result);
+    var result = JSON.parse(dataString);
+    console.log('result', result);
+    return (result[0].money);
   })
 }
 
@@ -194,6 +248,42 @@ const isPass = (tel) => {
   })
 }
 
+//查询是否有支付密码
+const isPsyPass = (uid) => {
+  return new Promise((resolve, reject) => {
+    db.pool.getConnection((err, connection) => {
+        err ? reject(err) : connection.query( `select payPass from userinfo where id = ${uid};` , (err, result) => {
+            err ? reject(err) : resolve(result);
+            connection.release();
+        })
+    })
+  }).then((result) => {
+    var dataString = JSON.stringify(result);
+    var result = JSON.parse(dataString);
+    return result;
+  })
+}
+
+//添加支付密码
+const addPayPass = (uid, pass) => {
+  console.log(uid, pass)
+  let createTime  = moment().format('YYYY-MM-DD HH:mm:ss');
+  return new Promise((resolve, reject) => {
+    db.pool.getConnection((err, connection) => {
+        err ? reject(err) : connection.query( `UPDATE userinfo set payPass='${pass}' where id = ${uid};` , (err, result) => {
+            err ? reject(err) : resolve(result);
+            connection.release();
+        })
+    })
+  }).then((result) => {
+    var dataString = JSON.stringify(result);
+    var result = JSON.parse(dataString);
+    return {
+      flag: true
+    };
+  })
+}
+
 const addUserInfo = () => {
   return new Promise((resolve, reject) => {
     db.pool.getConnection((err, connection) => {
@@ -213,7 +303,11 @@ module.exports = {
   addPass,
   isPass,
   sectelcode,
-  addUserInfo
+  addUserInfo,
+  isPsyPass,
+  addPayPass,
+  deMoney,
+  selectMoney
 }
 
 // 插入操作

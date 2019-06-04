@@ -10,6 +10,7 @@ const userModel = require('../models/user.model')
 const fs = require('fs')
 const path = require('path')
 const codeModel = require('../models/code.model');
+const orderModel = require('../models/order.model');
 
 const getUid = async (req, res, next) => {
   let _ = await userModel.getUid();
@@ -247,6 +248,106 @@ const signin = async (req, res, next) => {
   }
 }
 
+const pass = async (username, req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.header('Content-Type', 'application/json; charset=utf8');
+  let { passord, money, orderId } = req.body;
+  let uid = {}
+  if(/^[0-9]+$/.test(username)) {
+    uid = (await userModel.secUid('tel', username))[0];
+  } else {
+    uid = (await userModel.secUid('username', username))[0];
+  }
+  let _ = (await userModel.isPsyPass(uid.id))[0];
+
+    if (_.payPass) {
+      console.log(_);
+      if (await comparePassword({ password: passord, userPassword: _.payPass })) {
+        let resu = await userModel.selectMoney(uid.id);
+      let price = Number(resu) - Number(money);
+      if (price < 0) {
+        res.render('user.view.ejs', {
+          success: JSON.stringify(false),
+          data: JSON.stringify('余额不足'),
+          code: JSON.stringify(101),
+        })
+      } else {
+        let result = await userModel.deMoney(uid.id, price);
+        if (result.flag) {
+          let id = (await orderModel.selectId(uid.id))[0].orderId;
+          let _  = (await orderModel.selectInfo(id));
+          let newArr = JSON.parse(_.result.orderInfo);
+          for (let i = 0;i<newArr.length;i++) {
+            if (newArr[i].id === orderId) {
+                newArr[i].status = "待发货";
+            }
+          }
+          await orderModel.update(id, JSON.stringify(newArr));
+          res.render('user.view.ejs', {
+            success: JSON.stringify(true),
+            data: JSON.stringify('支付成功'),
+            code: JSON.stringify(0),
+          })
+        } else {
+          res.render('user.view.ejs', {
+            success: JSON.stringify(false),
+            data: JSON.stringify('支付失败'),
+            code: JSON.stringify(1),
+          })
+        }
+      }
+    } else {
+      res.render('user.view.ejs', {
+        success: JSON.stringify(false),
+        data: JSON.stringify('密码错误'),
+        code: JSON.stringify(1),
+      })
+    }
+  } else {
+    let password = await genBcryptPwd(passord);
+    let re = await userModel.addPayPass(uid.id, password);
+    if (re.flag) {
+      let resu = await userModel.selectMoney(uid.id);
+      let price = Number(resu) - Number(money);
+      if (price < 0) {
+        res.render('user.view.ejs', {
+          success: JSON.stringify(false),
+          data: JSON.stringify('余额不足'),
+          code: JSON.stringify(1),
+        })
+      } else {
+        let result = await userModel.deMoney(uid.id, price);
+        if (result.flag) {
+          let id = (await orderModel.selectId(uid.id))[0].orderId;
+          let _  = (await orderModel.selectInfo(id));
+          let newArr = JSON.parse(_.result.orderInfo);
+          for (let i = 0;i<newArr.length;i++) {
+            if (newArr[i].id === orderId) {
+                newArr[i].status = "待发货";
+            }
+          }
+          await orderModel.update(id, JSON.stringify(newArr));
+          res.render('user.view.ejs', {
+            success: JSON.stringify(true),
+            data: JSON.stringify('支付成功'),
+            code: JSON.stringify(0),
+          })
+        } else {
+          res.render('user.view.ejs', {
+            success: JSON.stringify(false),
+            data: JSON.stringify('支付失败'),
+            code: JSON.stringify(1),
+          })
+        }
+      }
+    }
+  }
+  
+  //判断是否有密码 如果有则匹配 没有则注册
+
+
+}
+
 async function telCodeSign(tel, code, TemplateCode) {
   let _ = await userModel.findOne(3, tel);
   var flag = false;
@@ -407,6 +508,7 @@ module.exports = {
   getUid,
   isPass,
   addPass,
+  pass,
 }
 
 function getyyyyMMdd() {
@@ -419,75 +521,3 @@ function getyyyyMMdd() {
   var yyyyMMdd = curr_year + "" + curr_month + "" + curr_date;
   return yyyyMMdd;
 }
-
-
-
-// const signup = async (req, res) => {
-//   res.header('Content-Type', 'application/json; charset=utf8')
-//   let { username, password } = req.body
-//   let user = await userModel.findOne(username)
-//   console.log(user)
-//   if (user.length !== 0) {
-//     res.render('user.view.ejs', {
-//       success: JSON.stringify(false),
-//       data: JSON.stringify({msg: '用户名存在.'}),
-//       code: JSON.stringify(1),
-//     })
-//   } else {
-//     let result = await userModel.save({
-//       username,
-//       password: await genBcryptPwd(password),
-//       uid
-//     })
-
-//     if (result) {
-//       res.render('user.view.ejs', {
-//         success: JSON.stringify(true),
-//         data: JSON.stringify({
-//           username
-//         }),
-//         code: JSON.stringify(0),
-//       })
-//     } else {
-//       res.render('user.view.ejs', {
-//         success: JSON.stringify(false),
-//         data: JSON.stringify({msg: 'fail'}),
-//         code: JSON.stringify(1),
-//       })
-//     }
-//   }
-// }
-
-// const signin = async (req, res) => {
-//   res.header('Content-Type', 'application/json; charset=utf8')
-//   const { username, password } = req.body
-//   let user = await userModel.findOne(username)
-//   let userPassword = user[0].password;
-//   console.log(user, userPassword);
-//   if (user) {
-//     console.log(await comparePassword({password, userPassword}));
-//     if(await comparePassword({password, userPassword})) {
-//       let token = genToken(username)
-//       res.render('user.view.ejs', {
-//         success: JSON.stringify(true),
-//         data: JSON.stringify({
-//           token,
-//           username
-//         }),
-//         code: JSON.stringify(0),
-//       })
-//     } else {
-//       res.render('user.view.ejs', {
-//         success: JSON.stringify(false),
-//         data: JSON.stringify({msg: '用户名或密码错误.'}),
-//         code: JSON.stringify(1),
-//       })
-//     }
-//   } else {
-//     res.render('user.view.ejs', {
-//       success: JSON.stringify(false),
-//       data: JSON.stringify({msg: '用户名或密码错误.'}),
-//       code: JSON.stringify(1),
-//     })
-//   }
-// }
