@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@alicloud/sms-sdk": "^1.1.6",
-    "bcrypt": "^3.0.1",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
